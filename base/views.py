@@ -5,11 +5,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
-from .models import Room, Topic
+from .models import Room, Topic, Message
 from .form import RoomForm
 from django.db.models import Q
 
 
+# Create your views here.
 def loginPage(request):
     page = "login"
     # if request.user.is_authenticated:
@@ -33,7 +34,6 @@ def loginPage(request):
     context = {"page": page}
     return render(request, "base/login_register.html", context)
 
-
 def logoutUser(request):
     logout(request)
     return redirect('login')
@@ -55,7 +55,6 @@ def registerUser(request):
     context = {"page": page, "form": form}
     return render(request, 'base/login_register.html', context)
 
-# Create your views here.
 def home(request):
 
     q = request.GET.get('q') if request.GET.get('q') != None else ''
@@ -75,7 +74,17 @@ def home(request):
 
 def room(request, pk):
     room = Room.objects.get(pk=pk)
-    context = {"room": room}
+    room_message = room.message_set.all().order_by('-created')
+
+    if request.method == 'POST':
+        message = Message.objects.create(
+            room= room,
+            user= request.user,
+            body= request.POST.get('body')
+        )
+        return redirect('room', pk=room.id)
+
+    context = {"room": room, "room_message": room_message}
     return render(request, "base/room.html", context)
 
 

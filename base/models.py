@@ -1,4 +1,4 @@
-from django.db.models import Model, CharField, TextField, DateTimeField, ForeignKey, CASCADE, SET_NULL
+from django.db.models import Model, CharField, TextField, DateTimeField, ForeignKey, CASCADE, SET_NULL, ManyToManyField
 from django.contrib.auth.models import User
 
 # Create your models here.
@@ -13,6 +13,7 @@ class Room(Model):
     topic = ForeignKey(Topic, on_delete=SET_NULL, null=True)
     name=CharField(max_length=100)
     description=TextField()
+    participants=ManyToManyField(User, related_name="participants", blank=True)
     updated=DateTimeField(auto_now=True)
     created=DateTimeField(auto_now_add=True)
 
