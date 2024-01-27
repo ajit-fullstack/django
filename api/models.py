@@ -1,4 +1,4 @@
-from django.db.models import Model, CharField, IntegerField, DateTimeField, TextField, ForeginKey, BooleanField
+from django.db.models import Model, CharField, IntegerField, DateTimeField, TextField, BooleanField, CASCADE
 
 # Create your models here.
 class OTP(Model):
@@ -9,7 +9,7 @@ class Blog(Model):
     description = TextField()
     category = CharField(max_length=80, default=None)
     publish_blog = BooleanField(default=False)
-    # keywords = 
+    keywords = TextField() 
     created = DateTimeField(auto_now=True)
     updated = DateTimeField(auto_now_add=True)
     user_id = IntegerField() 
