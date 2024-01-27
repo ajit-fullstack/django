@@ -182,5 +182,11 @@ def delete_reply(request, pk):
 
 @api_view(['GET'])
 def search_blog(request, name):
-    pass
+    blog = Blog.objects.filter(
+        Q(Blog.title__icontains == name)|Q(Blog.description__icontains == name)|Q(Blog.category__icontains == name)).all()
+    blog = Blog_Seriliazers(blog, many=True)
+    if blog:
+        return Response(blog.data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
