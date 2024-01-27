@@ -1,9 +1,10 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from .serilizer import *
 from rest_framework.response import Response
 from rest_framework import status
 from django.http import HttpResponse
+from django.db.models import Q, Sum
 
 # Create your views here.
 @api_view(["POST"])
@@ -117,27 +118,53 @@ def contact(request):
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-
-
 @api_view(['POST'])
 def comments(request):
-    pass
+    comment = Comments_Seriliazers(data=request.data)
+    if comment.is_valid():
+        comment.save()
+        return Response(comment.data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['GET'])
 def get_comments(request):
-    pass
+    comments = Comments.objects.filter(Q(Comments.user_id == request.data.user_id) & Q(Comments.blog_id == request.data.blog_id)).all()
+    comments = Comments_Seriliazers(comments, many=True)
+
+    if comments:
+        return Response(comments.data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['DELETE'])
 def delete_comments(request, pk):
-    pass
-
+    comment = Comments.objects.filter(Q(Comments.user_id == request.data.user_id) & Q(Comments.blog_id == request.data.blog_id))
+    comment = get_object_or_404(comment, id=pk)
+    comment.delete()
+    return HttpResponse("Comment has been deleted sucessfully")
+    
 @api_view(['POST'])
 def review(request):
-    pass
+    blog_review = Review_Seriliazers(data=request.data)
+    if blog_review.is_valid():
+        blog_review.save()
+        return Response(blog_review.data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
+# coding logic might need to update
 @api_view(['GET'])
 def get_review(request):
-    pass
+    review = Review.objects.filter(Q(Review.blog_id == request.data.blog_id) & Q(Review.user_id == request.data.user_id)
+        ).aggregate(like = Sum('like', default=0), dislike = Sum('dislike', default=0), share = Sum('share', default=0), read = Sum('read', default=0))
+    review = Reply_Seriliazers(review, many=True)
+    if review:
+        return Response(review.data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
 
 @api_view(['POST'])
 def reply(request):
@@ -150,6 +177,8 @@ def get_reply(request):
 @api_view(['DELETE'])
 def delete_reply(request, pk):
     pass
+
+
 
 @api_view(['GET'])
 def search_blog(request, name):
