@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.http import HttpResponse
 from django.db.models import Q, Sum
+from .utils import send_to_email
 
 # Create your views here.
 @api_view(["POST"])
@@ -92,10 +93,11 @@ def publish_blog(request, pk):
     return HttpResponse("Blog has been sucessfully published")
 
 @api_view(['POST'])
-def share_blog(request, pk):
+def share_blog(request):
     # share blog on email
     # update share column of review table
-    pass
+    send_to_email()
+    return HttpResponse({"message": "Email has been send sucessfully"})
 
 @api_view(['POST'])
 def subscribe(request):

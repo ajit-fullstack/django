@@ -14,7 +14,12 @@ urlpatterns = [
     path("update_blog/<int:pk>/", update_blog, name="update_blog"),
     path("delete_blog/<int:pk>/", delete_blog, name="delete_blog"),
     path("publish_blog/<int:pk>/", publish_blog, name="publish_blog"),
-    path("share_blog/<int:pk>/", share_blog, name="share_blog"),
+
+
+    path("share_blog/", share_blog, name="share_blog"),
+    # path("share_blog/<int:pk>/", share_blog, name="share_blog"),
+    
+    
     path("subscribe/", subscribe, name="subscribe"),
     path("unsubscribe/", unsubscribe, name="unsubscribe"),
     path("contact/", contact, name="contact"),
