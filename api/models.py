@@ -2,7 +2,9 @@ from django.db.models import Model, CharField, IntegerField, DateTimeField, Text
 
 # Create your models here.
 class OTP(Model):
-    pass
+    email_id= CharField(max_length=50, default=None)
+    otp= IntegerField()
+    created = DateTimeField(auto_now=True)
 
 class Blog(Model):
     title = CharField(max_length=500, default=None)
@@ -31,9 +33,9 @@ class Comments(Model):
 
 class Reply(Model):
     message = TextField()
+    created = DateTimeField(auto_now=True)
     comment_id = IntegerField()  # Froegin key
     blog_id = IntegerField()  # Froegin key
-    created = DateTimeField(auto_now=True)
     user_id = IntegerField()  # Froegin key
     
 
