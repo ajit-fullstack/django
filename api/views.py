@@ -35,6 +35,7 @@ def create_blog(request):
     blog = Blog_Seriliazers(data=request.data)
     if blog.is_valid():
         blog.save()
+        # check subscriber list and if blog is published then send email to all subscriber
         return Response(blog.data)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
@@ -44,6 +45,7 @@ def get_blog(request, pk):
     blog = Blog.objects.filter(id == pk)
     blog = Blog_Seriliazers(blog, many=True)
     if blog:
+        # update read column of review table
         return Response(blog.data)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
@@ -72,6 +74,7 @@ def update_blog(request, pk):
     blog = Blog_Seriliazers(instance=blog, data=request.data)
     if blog.is_valid():
         blog.save()
+        # check subscriber list and if blog was not published and after edit it is pucblished now then send email to all subscriber
         return Response(blog.data)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
@@ -79,6 +82,7 @@ def update_blog(request, pk):
 @api_view(['DELETE'])
 def delete_blog(request, pk):
     blog = get_object_or_404(Blog, pk=pk)
+    # delete all comments, review, image, other files, and reply of this blog
     blog.delete()
     return HttpResponse("Blog has been deleted sucessfully")
 
@@ -89,6 +93,8 @@ def publish_blog(request, pk):
 
 @api_view(['POST'])
 def share_blog(request, pk):
+    # share blog on email
+    # update share column of review table
     pass
 
 @api_view(['POST'])
@@ -114,6 +120,7 @@ def contact(request):
     const = Contact_Seriliazers(data=request.data)
     if const.is_valid():
         const.save()
+        # feedback email message to visitor and send an email to own for quick analysis
         return Response(const.data)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
@@ -164,26 +171,48 @@ def get_review(request):
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-
-
 @api_view(['POST'])
 def reply(request):
-    pass
+    comment_reply = Reply_Seriliazers(data=request.data)
+    if comment_reply.is_valid():
+        comment_reply.save()
+        return Response(comment_reply.data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['GET'])
 def get_reply(request):
-    pass
+    reply = Reply.objects.filter(
+        Q(Reply.comment_id == request.data.comment_id)
+        &Q(Reply.blog_id == request.data.blog_id)
+        &Q(Reply.user_id == request.data.user_id)
+    ).all()
+
+    reply = Reply_Seriliazers(reply, many=True)
+    if reply:
+        return Response(reply.data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['DELETE'])
 def delete_reply(request, pk):
-    pass
-
-
+    reply = Reply.objects.filter(
+        Q(Reply.comment_id == request.data.comment_id)&
+        Q(Reply.blog_id == request.data.blog_id)&
+        Q(Reply.user_id == request.data.user_id)
+    )
+    reply = get_object_or_404(reply, id=pk)
+    reply.delete()
+    return HttpResponse("Comment has been sucessfully deleted")
 
 @api_view(['GET'])
 def search_blog(request, name):
     blog = Blog.objects.filter(
-        Q(Blog.title__icontains == name)|Q(Blog.description__icontains == name)|Q(Blog.category__icontains == name)).all()
+        Q(Blog.title__icontains == name)
+        |Q(Blog.description__icontains == name)
+        |Q(Blog.category__icontains == name)
+    ).all()
+
     blog = Blog_Seriliazers(blog, many=True)
     if blog:
         return Response(blog.data)
