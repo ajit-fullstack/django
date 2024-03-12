@@ -87,7 +87,6 @@ def room(request, pk):
     context = {"room": room, "room_message": room_message,"participants": participants}
     return render(request, "base/room.html", context)
 
-
 @login_required(login_url="login")
 def createRoom(request):
     form = RoomForm()
@@ -108,7 +107,6 @@ def updateRoom(request, pk):
 
     if request.user != item.host:
         return HttpResponse('Your are not allowed here')
-
 
     if request.method == 'POST':
         form = RoomForm(request.POST, instance=item)
