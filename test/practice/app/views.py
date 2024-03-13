@@ -43,3 +43,18 @@ def register(request):
 def logoutUser(request):
     logout(request)
     return redirect('login')
+
+def create_blog(request):
+    pass
+
+def get_all_blog(request):
+    pass
+
+def get_blog(request, pk):
+    pass
+
+def update_blog(request, pk):
+    pass
+
+def delete_blog(request, pk):
+    pass
