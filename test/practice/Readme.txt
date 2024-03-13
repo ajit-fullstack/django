@@ -12,3 +12,6 @@ Impt for now in django:
 11. Message framework
 12. Middlewares
 13. Catch and cookies
+
+amansingh6779@gmail.com
+Singh@123aman
