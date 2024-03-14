@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 # Create your models here.
 class Blog(Model):
     user = ForeignKey(User, on_delete=CASCADE)
-    titel = CharField(max_length=100)
+    title = CharField(max_length=100)
     description = TextField()
     category = CharField(max_length=20, choices=(
         ('Python', 'Python'), 
