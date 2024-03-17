@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login as userLogin, logout
 from django.contrib.auth.forms import UserCreationForm
+from .forms import BlogForm
 
 # Create your views here.
 def home(request):
@@ -45,7 +46,12 @@ def logoutUser(request):
     return redirect('login')
 
 def create_blog(request):
-    pass
+    form = BlogForm()
+    if request.method == "POST":
+        form = BlogForm(request.POST)
+
+    context = {"form": form}
+    return render(request, 'app/main.html', context)
 
 def get_all_blog(request):
     pass

@@ -14,3 +14,12 @@ class Blog(Model):
         ('MERN', 'MERN')
     ))
     publish = BooleanField()
+
+
+
+# <form method="POST" action="">
+#     <div class="form-group">
+#         {% csrf_token %}
+#         {{form.as_p}}
+#     </div>
+# </form>
