@@ -46,12 +46,19 @@ def logoutUser(request):
     return redirect('login')
 
 def create_blog(request):
-    form = BlogForm()
-    if request.method == "POST":
-        form = BlogForm(request.POST)
-
-    context = {"form": form}
-    return render(request, 'app/main.html', context)
+    users = User.objects.all()
+    context = {'users': users}
+    if request.method == 'POST':
+        data = dict(request.POST)
+        data.update({"user": 1, "category": 'Python'})
+        form = BlogForm(data)
+        print(form, data)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+        else:
+            print('error')
+    return render(request, 'app/blog.html', context)
 
 def get_all_blog(request):
     pass
