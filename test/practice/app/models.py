@@ -17,9 +17,3 @@ class Blog(Model):
 
 
 
-# <form method="POST" action="">
-#     <div class="form-group">
-#         {% csrf_token %}
-#         {{form.as_p}}
-#     </div>
-# </form>
