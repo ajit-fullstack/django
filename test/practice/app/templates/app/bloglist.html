@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <table style="width: 100%;">
+        <thead>
+            <tr>
+                <td>User</td>
+                <td>Title</td>
+                <td>Description</td>
+                <td>Category</td>
+                <td>Publish</td>
+                <td></td>
+            </tr>
+        </thead>
+        {% for blog in blogs %}
+            <tr>
+                <td>{{ blog.user }}</td>
+                <td>{{ blog.title }}</td>
+                <td>{{ blog.description }}</td>
+                <td>{{ blog.category }}</td>
+                <td>{{ blog.publish }}</td>
+                <td>
+                    <a href="{% url 'delete' blog.id %}">Delete</a>
+                    <a href="{% url 'updateBlog' blog.id %}">Update</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

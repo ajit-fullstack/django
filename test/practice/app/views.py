@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login as userLogin, logout
 from django.contrib.auth.forms import UserCreationForm
 from .forms import BlogForm
+from .models import Blog
+from django.http import HttpResponse
 
 # Create your views here.
 def home(request):
@@ -61,13 +63,29 @@ def create_blog(request):
     return render(request, 'app/blog.html', context)
 
 def get_all_blog(request):
-    pass
+    blog = Blog.objects.all()
+    return render(request, 'app/bloglist.html', {'blogs': blog})
+    
 
 def get_blog(request, pk):
     pass
 
 def update_blog(request, pk):
-    pass
+    item = Blog.objects.get(id=pk)
+    form = BlogForm(instance=item)
+
+    if request.method == "POST":
+        form = BlogForm(request.POST, instance=item)
+        if form.is_valid():
+            form.save()
+            return redirect('app/home')
+        
+    context = {"form": form}
+    return render(request, 'app/blog.html', context)
 
 def delete_blog(request, pk):
-    pass
+    blog = Blog.objects.get(id=pk)
+    if request.method == "POST":
+        blog.delete()
+        return redirect('app/home')
+    return HttpResponse('Blog has been deleted sucessfully')
